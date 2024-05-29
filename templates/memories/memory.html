@@ -1,0 +1,45 @@
+{% extends './base.html' %}
+{% block content %}
+<head>
+    <title>Add Memory</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <style>
+        #map {
+            height: 400px;
+        }
+    </style>
+</head>
+<div class=''>
+    <form class='flex flex-col gap-3 items-center' method="post">
+        <a href="{% url 'home' %}" class='underline'>Back</a>
+        {% csrf_token %}
+        <p>Название: {{ form.title }} </p>
+        <p>Описание: {{ form.description }} </p>
+        <div class='flex gap-1'>
+            <p>Широта: {{ form.latitude }} </p>
+            <p>Долгота: {{ form.longitude }} </p>
+        </div>
+        <button class='bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full text-xl' type="submit">Save</button>
+    </form>
+    <div id="map">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([51.505, -0.09], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        var marker = L.marker([51.5, -0.09]).addTo(map);
+
+        function onMapClick(e) {
+            marker.setLatLng(e.latlng);
+            document.getElementById('id_latitude').value = e.latlng.lat;
+            document.getElementById('id_longitude').value = e.latlng.lng;
+        }
+
+        map.on('click', onMapClick);
+    </script>
+</div>
+
+{% endblock %}

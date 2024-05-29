@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgis/postgis:13-3.1
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: travel
+      POSTGRES_USER: olya
+      POSTGRES_PASSWORD: P@ssw0rd
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:80
+    volumes:
+      - .:/code
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME=travel
+      - DB_USER=olya
+      - DB_PASSWORD=P@ssw0rd
+      - DB_HOST=db
+      - DB_PORT=5432
+
+volumes:
+  postgres_data:
